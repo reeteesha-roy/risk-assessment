@@ -1,12 +1,10 @@
 import streamlit as st
 import json
 import pandas as pd
-from dotenv import load_dotenv
 import os
 from openai import OpenAI
-
+import streamlit as st
 # ---------------- SETUP ----------------
-load_dotenv()
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
