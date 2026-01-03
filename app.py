@@ -1,20 +1,13 @@
-import streamlit as st
 import json
 import pandas as pd
 import os
 from openai import OpenAI
-
+import streamlit as st
 # ---------------- SETUP ----------------
-
-API_KEY = os.getenv("OPENAI_API_KEY")
-
-if not API_KEY:
-    st.error("OPENAI_API_KEY not found in environment variables")
-    st.stop()
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=API_KEY
+    api_key= os.getenv("OPENAI_API_KEY")
 )
 
 st.set_page_config(
@@ -53,7 +46,7 @@ def ai_call(system, user):
     return response.choices[0].message.content
 
 # ---------------- UI ----------------
-st.title("AI Risk Assessment")
+st.title("AI Risk Assessment ")
 st.caption("eBAJA ATV Manufacturing | Scenario-Based Risk Intelligence")
 
 uploaded = st.file_uploader("Upload Risk Dataset (CSV)", type=["csv"])
@@ -62,10 +55,10 @@ if uploaded:
     df = pd.read_csv(uploaded)
     df.ffill(inplace=True)
 
-    st.subheader("Input Dataset")
+    st.subheader(" Input Dataset")
     st.dataframe(df, use_container_width=True)
 
-    if st.button("Run AI Risk Assessment"):
+    if st.button(" Run AI Risk Assessment"):
         with st.spinner("Analyzing risks using AI..."):
             prompt = f"""
 You are an AI risk assessment engine for an eBAJA ATV manufacturing company.
@@ -104,7 +97,8 @@ scenario, risk_name, likelihood, impact, confidence, early_indicators, reason
 
         st.success("Risk analysis complete ✅")
 
-        st.subheader("Prioritized Risks")
+        # ---------------- DISPLAY ----------------
+        st.subheader(" Prioritized Risks")
 
         for r in risks:
             with st.container(border=True):
@@ -114,7 +108,7 @@ scenario, risk_name, likelihood, impact, confidence, early_indicators, reason
                 st.markdown(f"**Reason:** {r['reason']}")
                 st.markdown(f"**Early Indicators:** {r['early_indicators']}")
 
-        st.subheader("Download Results")
+        st.subheader("📥 Download Results")
         st.download_button(
             "Download JSON",
             json.dumps(risks, indent=2),
